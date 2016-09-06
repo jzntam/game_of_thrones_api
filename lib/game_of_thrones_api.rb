@@ -8,31 +8,39 @@ module GameOfThronesApi
   BASE_ENDPOINT = "http://anapioficeandfire.com/api"
 
   def self.get_books
-    get("#{BASE_ENDPOINT}/books").parsed_response
+    response    = get("#{BASE_ENDPOINT}/books?page=1&pageSize=50")
+    total_pages = get_page_count(response)
+
+    get_all_records('books', response, total_pages)
   end
 
   def self.find_book(name)
-    name = name_query(filter)
+    name = name_query(name)
     get("#{BASE_ENDPOINT}/books#{name}").parsed_response
   end
 
   def self.get_characters
-    get("#{BASE_ENDPOINT}/characters").parsed_response
+    response    = get("#{BASE_ENDPOINT}/characters?page=1&pageSize=50")
+    total_pages = get_page_count(response)
+
+    get_all_records('characters', response, total_pages)
   end
 
   def self.find_character(name)
-    name = name_query(filter)
+    name = name_query(name)
     get("#{BASE_ENDPOINT}/characters#{name}").parsed_response
   end
 
   def self.get_houses
-    filter = name_query(filter) if filter
-    get("#{BASE_ENDPOINT}/houses#{filter}").parsed_response
+    response    = get("#{BASE_ENDPOINT}/houses?page=1&pageSize=50")
+    total_pages = get_page_count(response)
+
+    get_all_records('houses', response, total_pages)
   end
 
   def self.find_house(name)
-    filter = name_query(filter) if filter
-    get("#{BASE_ENDPOINT}/houses#{filter}").parsed_response
+    name = name_query(name)
+    get("#{BASE_ENDPOINT}/houses#{name}").parsed_response
   end
 
   module_function
@@ -43,5 +51,21 @@ module GameOfThronesApi
 
   def uri_escape(term)
     term.gsub(' ', '%20')
+  end
+
+  def get_page_count(response)
+    page_links = response.headers['link'].scan(/<(\S+)>/).flatten
+    /\?page\=(\d+)\&/.match(page_links.last)[1].to_i
+  end
+
+  def get_all_records(category, response, total_pages, page = 1)
+    characters  = response.parsed_response
+
+    while total_pages >= page
+      page       += 1
+      characters += get("#{BASE_ENDPOINT}/#{category}?page=#{page}&pageSize=50").parsed_response
+    end
+
+    characters
   end
 end

@@ -6,7 +6,7 @@ API Wrapper using [An API Of Ice And Fire](https://anapioficeandfire.com/)
 
 Still In developement. Basic Functionality. Find Books, Characters and Houses.
 
-##### TODO: Better filtering, incorporate pagination, complete API functionality and of course tests.
+##### TODO: Better filtering, fuzzy find for houses, complete API functionality and of course tests.
 
 ## Installation
 
@@ -35,7 +35,7 @@ GameOfThronesApi.get_books
 
 #### Find a single book
 ```
-GameOfThronesApi.find_book('A Game of Thrones')
+GameOfThronesApi.find_book('A Dance with Dragons')
 ```
 
 #### Retrieve Characters
@@ -53,9 +53,9 @@ GameOfThronesApi.find_book('Jon Snow')
 GameOfThronesApi.get_houses
 ```
 
-#### Find a single book
+#### Find a specific House, must be complete house name. Will implement a fuzzy search in the future.
 ```
-GameOfThronesApi.find_house('targaryen')
+GameOfThronesApi.find_house("House Targaryen of King's Landing")
 ```
 
 ## Contributing
