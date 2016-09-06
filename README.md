@@ -1,12 +1,12 @@
 # GameOfThronesApi
 
-Something for *Game of Thrones* & *A Song of Fire and Ice* fans.
+Something for **Game of Thrones** & **A Song of Ice and Fire** fans.
 
-API Wrapper using [An API Of Ice And Fire](https://anapioficeandfire.com/)
+A Ruby API Wrapper using [An API Of Ice And Fire](https://anapioficeandfire.com/). All credit goes to **Joakim Skoog** the creator of the API.
 
 Still In developement. Basic Functionality. Find Books, Characters and Houses.
 
-##### TODO: Better filtering, fuzzy find for houses, complete API functionality and of course tests.
+##### TODO: Implement better filtering, fuzzy find for houses, complete API functionality and of course tests.
 
 ## Installation
 
@@ -26,29 +26,29 @@ Or install it yourself as:
 
 ## Usage
 
-#### An API Of Ice And Fire is Public, no authentication required
+#### An API Of Ice And Fire is public, no authentication required
 
-#### Retrieve Books
+#### Retrieve all Books
 ```
 GameOfThronesApi.get_books
 ```
 
-#### Find a single book
+#### Find a single book, by book title.
 ```
 GameOfThronesApi.find_book('A Dance with Dragons')
 ```
 
-#### Retrieve Characters
+#### Retrieve all Characters
 ```
 GameOfThronesApi.get_characters
 ```
 
-#### Find a character
+#### Find a Character by Name (enter full name).
 ```
 GameOfThronesApi.find_book('Jon Snow')
 ```
 
-#### Retrieve House
+#### Retrieve all Houses
 ```
 GameOfThronesApi.get_houses
 ```
@@ -56,6 +56,11 @@ GameOfThronesApi.get_houses
 #### Find a specific House, must be complete house name. Will implement a fuzzy search in the future.
 ```
 GameOfThronesApi.find_house("House Targaryen of King's Landing")
+```
+To list all House names (444 in total) do the following
+```
+houses = GameOfThronesApi.get_houses
+houses.map { |house| house['name'] }
 ```
 
 ## Contributing
