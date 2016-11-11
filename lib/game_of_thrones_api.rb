@@ -24,7 +24,7 @@ module GameOfThronesApi
       response    = get("#{BASE_ENDPOINT}/books?page=1&pageSize=50")
       total_pages = get_page_count(response)
 
-      get_all_records('books', response, total_pages)
+      get_all_records('books', response.parsed_response, total_pages)
     end
   end
 
@@ -40,7 +40,7 @@ module GameOfThronesApi
       response    = get("#{BASE_ENDPOINT}/characters?page=1&pageSize=50")
       total_pages = get_page_count(response)
 
-      get_all_records('characters', response, total_pages)
+      get_all_records('characters', response.parsed_response, total_pages)
     end
   end
 
@@ -56,7 +56,7 @@ module GameOfThronesApi
       response    = get("#{BASE_ENDPOINT}/houses?page=1&pageSize=50")
       total_pages = get_page_count(response)
 
-      get_all_records('houses', response, total_pages)
+      get_all_records('houses', response.parsed_response, total_pages)
     end
   end
 
@@ -89,7 +89,7 @@ module GameOfThronesApi
   def titleize_query(query)
     split_words =
       query.split.map.with_index do |word, index|
-        if WORD_PARTICLES.exclude?(word) || index.zero?
+        if !WORD_PARTICLES.include?(word) || index.zero?
           word.capitalize
         else
           word
@@ -101,14 +101,13 @@ module GameOfThronesApi
 
   # The API results are paginated, just looping through the pages to collect
   # all the records associated with the category.
-  def get_all_records(category, response, total_pages, page = 1)
-    characters  = response.parsed_response
-
-    while total_pages >= page
-      page       += 1
-      characters += get("#{BASE_ENDPOINT}/#{category}?page=#{page}&pageSize=50").parsed_response
+  def get_all_records(category, records, total_pages, page = 1)
+    if total_pages >= page
+      page    += 1
+      records += get("#{BASE_ENDPOINT}/#{category}?page=#{page}&pageSize=50").parsed_response
+      get_all_records(category, records, total_pages, page)
+    else
+      records
     end
-
-    characters
   end
 end
